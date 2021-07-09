@@ -3,35 +3,35 @@
 export const WeeklyData = [
 
         {
-            minTemp: 23,
+            minTemp: 70,
             maxTemp: 32,
             description:'sunny',
             weatherIcon: 1,
             day:1 
         },
         {
-            minTemp: 21,
+            minTemp: 75,
             maxTemp: 34,
             description:'very sunny',
             weatherIcon: 16,
             day:2  
         },
         {
-            minTemp: 17,
+            minTemp: 85,
             maxTemp: 22,
             description:'warm',
             weatherIcon: 4,
             day:3 
         },
         {
-            minTemp: 28,
+            minTemp: 90,
             maxTemp: 34,
             description:'windy',
             weatherIcon: 22,
             day:4  
         },
         {
-            minTemp: 7,
+            minTemp: 80,
             maxTemp: 16,
             description:'fucking cold',
             weatherIcon: 17,
