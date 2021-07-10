@@ -1,6 +1,6 @@
 import React from 'react';
 import { createSlice, configureStore } from '@reduxjs/toolkit';
-
+import CityInfoSlice from './city-slice';
 
 
 const darkModeSlice = createSlice({
@@ -41,7 +41,7 @@ const tempToggleSlice = createSlice({
 
 
 const store = configureStore({
-    reducer:{darkMode:darkModeSlice.reducer, tempToggle:tempToggleSlice.reducer}
+    reducer:{darkMode:darkModeSlice.reducer, tempToggle:tempToggleSlice.reducer, CityInfo: CityInfoSlice.reducer}
 });
 
 export const darkModeActions = darkModeSlice.actions;

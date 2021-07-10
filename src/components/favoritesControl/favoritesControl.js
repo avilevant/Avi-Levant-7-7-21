@@ -71,7 +71,7 @@ const FavoritesControl =(location,cityName)=>{
         <div className='flex items-center p-1'>
         {likeIcon}
         </div>
-        <button className='border-2 border-grey-600 p-1 text-xs' onClick={()=>updateFavorites()}>{addToFavoritesText}</button>
+        <button className='border-2 border-grey-600 p-1 text-xs dark:text-white' onClick={()=>updateFavorites()}>{addToFavoritesText}</button>
         </div>
     )
 

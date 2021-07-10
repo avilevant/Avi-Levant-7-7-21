@@ -1,4 +1,6 @@
 import React,{useEffect,useState} from 'react';
+import { CityInfoActions } from '../../store/city-slice';
+import { useDispatch } from 'react-redux';
 import { favorites } from '../tesingData/testingData';
 import CurrentWeather from '../currentWeather/currentWeather';
 import { useHistory } from 'react-router-dom';
@@ -11,26 +13,37 @@ const WeatherCardFavorites=()=>{
     const [chosenFavorite, setChosenFavorite] = useState(favorites);
     const history = useHistory();
 
+    const dispatch = useDispatch()
+
+    const EnterCityInfo = (city,code) => {
+        dispatch(CityInfoActions.setCityInfo({
+            cityName:city,
+            locationKey:code
+         
+        }))
+    }
+
     //get favorites from localStorage
-    // useEffect(()=>{
-    //     if(localStorage.getItem('favorites')){
-    //         setArrayOfFavorites(JSON.parse(localStorage.getItem('favorites')))
-    //         console.log(arrayOfFavorites)
-    //     }
-    // },)
+    useEffect(()=>{
+        if(localStorage.getItem('favorites')){
+            let array = JSON.parse(localStorage.getItem('favorites'))
+            // setArrayOfFavorites(array)
+            console.log(array)
+        }
+    },)
    
 
     //get http for dailyweather for each location key stored in local storage
-    // const dailyW = ()=>{
-    //            arrayOfFavorites.map((e)=>(
-    //         fetch(`http://dataservice.accuweather.com/currentconditions/v1/${e.locationKey}?apikey=${ApiKey}`)
-    //             .then(res =>res.json())
-    //             .then(res=>setDailyFavoritesWeather({
-    //                 tempFarenhite:res[0].Temperature.Imperial.Value,
-    //                 tempCelsius:res[0].Temperature.Metric.Value,
-    //                 Icon:res[0].WeatherIcon,
-    //                 text:res[0].WeatherText
-    //             })) )) 
+//     const dailyW = ()=>{
+//                arrayOfFavorites.map((e)=>(
+//             fetch(`http://dataservice.accuweather.com/currentconditions/v1/${e.locationKey}?apikey=${ApiKey}`)
+//                 .then(res =>res.json())
+//                 .then(res=>setDailyFavoritesWeather({
+//                     tempFarenhite:res[0].Temperature.Imperial.Value,
+//                     tempCelsius:res[0].Temperature.Metric.Value,
+//                     Icon:res[0].WeatherIcon,
+//                     text:res[0].WeatherText
+//                 })) )) 
 //  }
 
 
@@ -45,6 +58,8 @@ const WeatherCardFavorites=()=>{
   
     const favoriteWeekly =(info)=>{
         console.log(info.city)
+        // EnterCityInfo(info.city, info.code)
+        EnterCityInfo('Jerusalem', '213225')
         history.push('/')
     }
     
@@ -53,7 +68,7 @@ const WeatherCardFavorites=()=>{
         return(
 
             !!favorites &&  favorites.map((info,index)=>(
-                    <div key={index} class="flex place-self-center shadow-lg  p-4 dark:bg-black" 
+                    <div key={index} className="flex place-self-center shadow-lg  p-2 mt-2 dark:bg-black" 
                          onClick={()=>{favoriteWeekly(info)} }>
                         <CurrentWeather     city={info.city}
                                             Icon={info.Icon}

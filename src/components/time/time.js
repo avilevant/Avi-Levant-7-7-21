@@ -6,8 +6,8 @@ const TimeDate = () =>{
 
     useEffect(()=>{
         setInterval(()=>setCurrentDateTime(new Date().toLocaleString()),1000)
-    },[])
-    return <p  className='text-xs'>{currentDateTime}</p>
+    },[currentDateTime])
+    return <p  className='text-xs dark:text-white'>{currentDateTime}</p>
 }
 
 export default TimeDate;

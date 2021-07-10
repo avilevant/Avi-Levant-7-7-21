@@ -10,8 +10,8 @@ function App() {
   const mode=useSelector(state=> state.darkMode.dark);
 
   return (
-  
-      <div className={ mode ? 'dark' : ''}>
+    <div className={ mode ? 'dark' : ''}>
+      <div className='dark:bg-gray-600'>
         <Router>
           <NavigationBar/>
             <Switch>
@@ -20,6 +20,7 @@ function App() {
             </Switch>
         </Router>
       </div>
+    </div>
  
   );
 }

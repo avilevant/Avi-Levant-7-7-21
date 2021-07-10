@@ -3,9 +3,7 @@ import WeatherCardFavorites from '../components/weatheCardFavorites/weatheCardFa
 
 const FavoritesPage =()=>{
     return(
-        <div>
-        
-        <h1>favorites PAge</h1>
+        <div className='dark:bg-gray-600'>
         <WeatherCardFavorites/>
         </div>
     )

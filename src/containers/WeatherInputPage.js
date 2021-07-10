@@ -10,9 +10,17 @@ import SearchBar from '../components/searchBar/searchBar';
 import { FarToCel, CelToFar } from '../components/weatheDegreesConverter/weatheDegreesConverter';
 import ToggleButton from 'react-toggle-button';
 import { tempToggleActions } from '../store/index2';
+import { WiCelsius } from "react-icons/wi";
+import { WiFahrenheit } from "react-icons/wi";
+
+
+const borderRadiusStyle = { borderRadius: 2 } 
 
 const WeatherInput = () =>{
-  
+
+    const cityInfo =useSelector(state=>state.CityInfo)
+    console.log(cityInfo)
+    const {cityName,locationKey} = cityInfo
     const value=useSelector(state=> state.tempToggle.celsius)
     const dispatch = useDispatch()
     const dispatchToggleTemp = () =>{
@@ -22,21 +30,15 @@ const WeatherInput = () =>{
     
     const ApiKey = 'H7yrC1AsYvxVboXkWg3pcGqFFGh58Uxj'
     const [dailyWeather, setDailyWeather] = useState(CurrentWeatherData);
-    const [locationKey, setLocationKey] = useState('215854');
     const [weeklyWeather, setWeeklyWeather] = useState(WeeklyData);
     const [cityInput, setCityInput] = useState('');
     const [citySelect, setCitySelect] = useState();
-    const [tempValueChange, setTempValueChange]= useState(<FarToCel/>);
-    // const [degreesView, setDegreesView] = useState(dailyWeather.tempCelsius);
-    const [cityInfo, setCityInfo] = useState({
-        city:'Tel Aviv',
-        country:'Israel',
-        newLocationKey:'215854'
-    });
+
+  
     
     const weekDays = [ 'Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     
-    // useEffect(()=>{
+    // useEffect((cityInfo)=>{
     //     fetch(`http://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${ApiKey}`)
     //     .then(res =>res.json())
     //     .then(res=>setDailyWeather({
@@ -63,33 +65,14 @@ const WeatherInput = () =>{
     // },[locationKey])
     
 
-    // useEffect(()=>{console.log ("daily:", dailyWeather,"weekly: " , weeklyWeather,'cityInfo: ',cityInfo,'cityInput: ',cityInput ,'citySelect:',citySelect )},[dailyWeather,weeklyWeather,cityInfo,cityInput,citySelect])
+    
     
    
         
-    //     useEffect(()=>{
-    //         fetch(`http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=H7yrC1AsYvxVboXkWg3pcGqFFGh58Uxj&q=${cityInput}`)
-    //         .then(res =>res.json())
-    //         .then(res=>setCityInfo({
-    //             // cityArray:res.AdministrativeArea.LocalizedName,
-    //             city:res[0].AdministrativeArea.LocalizedName,
-    //             country:res[0].Country.LocalizedName,
-    //             newLocationKey:res[0].Key
-    //         }))
-    //     },[cityInput])
-
-
-        //  useEffect(()=>{
-        //     fetch(`http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=H7yrC1AsYvxVboXkWg3pcGqFFGh58Uxj&q=${cityInput}`)
-        //     .then(res =>res.json())
-        //     .then(res=>setCitySelect({
-        //         value:res[0].AdministrativeArea.LocalizedName,
-        //         label:res[0].AdministrativeArea.LocalizedName
-        // }))
-        // },[cityInput])
+    
    
     const findCityInfo =()=>{
-        setLocationKey(cityInfo.newLocationKey)
+        // setLocationKey(cityInfo.newLocationKey)
     }
 
     const FarToCelsius =(tempInF)=>{
@@ -109,8 +92,8 @@ const WeatherInput = () =>{
             
             !!weeklyWeather &&  weeklyWeather.map((info,index)=>(
                     <div key={index}>
-                        <WeatherCardWeekly  minTemp= {value ? FarToCelsius(info.minTemp): CelsiusToFar(info.minTemp) } //receives tempValueChange
-                                            maxTemp= {value ? FarToCelsius(info.maxTemp): CelsiusToFar(info.maxTemp)} 
+                        <WeatherCardWeekly  minTemp= {value ? FarToCelsius(info.minTemp): info.minTemp } //receives tempValueChange
+                                            maxTemp= {value ? FarToCelsius(info.maxTemp): info.maxTemp} 
                                             description={info.description}
                                             weatherIcon={info.weatherIcon}
                                             day={info.day} />
@@ -118,29 +101,20 @@ const WeatherInput = () =>{
             ))
         )}
         
-        // <input className='border-2 border-indigo-600'  
-        // value={cityInput} 
-        // onChange={e=>{
-        //     setCityInput(e.target.value)
-        // } }/> 
-        
-        // <h2>{cityInfo.cityArray}</h2>
         
         
-
     return(
-        <div>
+        <div className="dark:bg-gray-600">
             <div className='flex justify-center m-4 text-xs '>
             <div className='w-20'>
             <SearchBar />
             </div>
-                <button className='border-2 border-grey-600 p-1 ml-2' onClick={findCityInfo}>search weather</button>    
+                <button className='border-2 border-grey-600 p-1 ml-2 dark:text-white' onClick={findCityInfo}>search weather</button>    
             </div>
-            <div className='container mx-auto border-2 border-grey-600 p-2 '>
-                <div class="flex  sm:justify-between ">
+            <div className='border-2 border-grey-600 p-2 dark:bg-black'>
+                <div className="flex  sm:justify-between ">
                     <div className=' text-sm '>
-                        <h1>{cityInfo.city}</h1>
-                        <h1>{cityInfo.country}</h1>
+                        <h1 className='dark:text-white'>{cityName}</h1>
                         <TimeDate/>    
                     </div>
                         <div>
@@ -148,21 +122,26 @@ const WeatherInput = () =>{
                         </div>
                      
                     <div>
-                    <FavoritesControl locationKey={'fru345345'} cityName={'dd232323kkkkdf'}/>
-                    <div className='flex justify-center mt-4'>
-                    <ToggleButton  value={value} onToggle={()=>dispatchToggleTemp()}/>
-                    </div>
-
+                    <FavoritesControl locationKey={locationKey} cityName={cityName}/>
+                   
                     </div>
                 </div>
                     <div className='grid grid-cols-1  sm:grid-cols-5 gap-4'>
                     {WeatherCards()}
                     </div>
-                
+                    <div className='flex justify-center mt-4'>
+                    <p className='text-xs mr-1'>F/C Display</p>
+                    <ToggleButton  value={value} onToggle={()=>dispatchToggleTemp()}
+                    inactiveLabel={<WiCelsius/>}
+                    activeLabel={<WiFahrenheit/>}
+                    thumbStyle={borderRadiusStyle}
+                    trackStyle={borderRadiusStyle}/>
+                    
+                    </div>
+
             </div>
         </div>
             
-        // <FavoritesControl locationKey={locationKey} cityName={cityInfo.city}/>
        
 
     )
