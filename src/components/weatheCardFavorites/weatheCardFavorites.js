@@ -28,9 +28,9 @@ const WeatherCardFavorites=()=>{
         if(localStorage.getItem('favorites')){
             let array = JSON.parse(localStorage.getItem('favorites'))
             // setArrayOfFavorites(array)
-            console.log(array)
+            console.log("read array weather cards: ", array)
         }
-    },)
+    },[])
    
 
     //get http for dailyweather for each location key stored in local storage

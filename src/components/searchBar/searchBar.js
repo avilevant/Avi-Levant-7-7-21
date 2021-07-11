@@ -1,8 +1,8 @@
 import React, {useState} from 'react';
 import AsyncSelect  from 'react-select/async';
-import { CityInfoActions } from '../../store/city-slice';
+
 // import { SearchCities } from '../../weatherLogic/fetchCalls';
-import { useDispatch } from 'react-redux';
+
 import { getCitiesByString } from '../../weatherLogic/fetchCalls';
 import Autosuggest from 'react-autosuggest';
 
@@ -11,15 +11,7 @@ import Autosuggest from 'react-autosuggest';
 
 const SearchBar = () =>{
 
-    const dispatch = useDispatch()
-
-    const EnterCityInfo = () => {
-        dispatch(CityInfoActions.setCityInfo({
-            cityName:'Tel Aviv',
-            locationKey:'215854'
-         
-        }))
-    }
+  
 
     const [suggestions, setSuggestions] = useState('');
     const [value, setValue] =useState('')
@@ -67,14 +59,16 @@ const SearchBar = () =>{
     //     />
     // )
 
-    const languages =async(searchInput)=>{
-        const response = await fetch(`https://jsonplaceholder.typicode.com/users?name_like=${searchInput}`)
-        if(!response.ok){
-            throw new Error("can't get city names")
-        }
-        const cities=await response.json()
-        console.log(cities)
-    }
+    
+    // const languages =async(searchInput)=>{
+    //     const response = await fetch(`https://jsonplaceholder.typicode.com/users?name_like=${searchInput}`)
+    //     if(!response.ok){
+    //         throw new Error("can't get city names")
+    //     }
+    //     const cities=await response.json()
+    //     console.log(cities)
+    //     return cities
+    // }
         // Teach Autosuggest how to calculate suggestions for any given input value.
     const getSuggestions = value => {
         const inputValue = value.trim().toLowerCase();
@@ -131,3 +125,72 @@ const SearchBar = () =>{
 }
 
 export default SearchBar;
+
+
+// const SearchCity = () =>{
+
+//     const [cities, setCities] = useState([]);
+//     const [input, setInput] = useState([]);
+//     const [suggestions, setSuggestions] = useState([])
+
+//     useEffect(() => {
+//        const loadCities = async()=>{
+//         const response = await fetch(`https://jsonplaceholder.typicode.com/users?name_like=${input}`)
+//             if(!response.ok){
+//                 throw new Error("can't get city names")
+//             }
+//             const cityList=await response.json()
+//             setCities(cityList)
+//             console.log("recived from url: " ,cityList)    
+//        }
+//        loadCities()
+//     }, [input])
+
+
+//     const onChangeInput = (text) =>{
+//         let options=[]
+//         if(text.length>0){
+//             options= cities.filter(city=>{
+//                 const results = new RegExp(`${text}`,"gi");//change later
+//                 return city.name.match(results)
+//             })
+//         }
+//         console.log('options: ', options)
+//         setSuggestions(options)
+//         setInput(text)
+//     }
+
+//     const optionsHandler =(input)=>{
+//         setInput(input)
+//         setSuggestions([])
+//         console.log('input:',input)
+//     }
+
+//     const getCityData =()=>{
+//         setInput('')
+//     }
+
+//     return(
+//         <div>
+//         <div className='flex justify-center m-4 text-xs '>
+//             <div >
+//             <input className='border-2 p-1 ml-2' type='text' 
+//             value={input} onChange={e=>{onChangeInput(e.target.value)}}
+//             />
+//             {suggestions && suggestions.map((suggestion, i) =>
+//                 <div key={i} className='border-2 ml-3 z-50 hover:bg-gray-300'
+//                 onClick={()=>{optionsHandler(suggestion.name)}} >
+//                 {suggestion.name}
+//                 </div>
+//                 )}
+//             </div>
+//             <div>
+//             <button className='border-2 border-grey-600 p-1 ml-2 dark:text-white' onClick={()=>getCityData()}>search weather</button>   
+//     </div>         
+//             </div>
+//         </div>
+      
+//     )
+// }
+
+// export default SearchCity;

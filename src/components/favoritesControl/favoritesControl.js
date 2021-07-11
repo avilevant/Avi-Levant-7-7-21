@@ -3,75 +3,62 @@ import { FcLike } from "react-icons/fc";
 import { IoIosHeartEmpty } from "react-icons/io";
 
 
-const FavoritesControl =(location,cityName)=>{
-
-
-    // const [addToFavorites, setAddToFavorites]= useState([]); use instead of facvoritesArray???
+const FavoritesControl =(Location)=>{
+ 
     const [addToFavoritesOption, setAddToFavoritesOption]= useState(true);
-    const [addToFavoritesText, setAddToFavoritesText]= useState('Add To Favorites');
-    const [likeIcon, setLikeIcon] = useState(<IoIosHeartEmpty/>)
-
-    // insert info from local storage
-    let favoritesArray=[]
 
     const ChangButtonState = ()=>{
-        setAddToFavoritesText('Remove Favorite');
-        setLikeIcon(<FcLike/>)
-        setAddToFavoritesOption(false)
+        setAddToFavoritesOption(!addToFavoritesOption)
+        console.log('button state: ',addToFavoritesOption) 
     }
 
+    const readLocalStorage =()=>{
+        let favoritesArray=JSON.parse(localStorage.getItem('favorites')) || [] 
+        return(favoritesArray) }
 
-    const updateFavorites=()=>{   
-        if(favoritesArray.includes(location.locationKey)){
-            setAddToFavoritesOption(false)
-        }else{
-            setAddToFavoritesOption(true)
-        }
+    const setLocalStorage =(favoritesArray)=>{
+        localStorage.setItem("favorites",JSON.stringify(favoritesArray)) 
+        return(favoritesArray) }    
+    
 
-
+    const updateFavorites=(Location)=>{ 
+        
           if(addToFavoritesOption===true){
             ChangButtonState()
-            favoritesArray.push(location)
-            console.log(favoritesArray)
-            localStorage.setItem("favorites",JSON.stringify(favoritesArray))//add to local storage
-            console.log(localStorage)
-            
-
-          }else if(addToFavoritesOption===false){
-            setAddToFavoritesText('Add To Favorites');
-            setLikeIcon(<IoIosHeartEmpty/>)
-            favoritesArray = favoritesArray.filter((e)=>e!==location.locationKey)
-            console.log(favoritesArray)
-            localStorage.setItem("favorites",JSON.stringify(favoritesArray))//add to local storage
-            setAddToFavoritesOption(true)  
+            let array = readLocalStorage()
+                if(!array.find((e)=>e.locationKey===Location.locationKey)){
+                    console.log('locationKey+:' ,Location)
+                    array.push(Location)
+                    setLocalStorage(array)
+                    console.log(localStorage)
+                }
+          }else{
+            let array = readLocalStorage().filter(e=>e.locationKey!==Location.locationKey)
+            console.log('new array: ', array)
+            setLocalStorage(array)
+            ChangButtonState()  
             console.log(localStorage)
           }  
     }
 
-   
-
+ 
     //check if entered city already in favorites
     useEffect(()=>{
-        favoritesArray=JSON.parse(localStorage.getItem('favorites')) || []
-        console.log('favor: ', favoritesArray)
-        console.log('favorLOcation: ', favoritesArray.location)
-        if(favoritesArray.includes(location.locationKey)){
+        let array= readLocalStorage()
+        if(array.find((e)=>e.locationKey===Location.locationKey)){
             ChangButtonState()   
     }
 
-},[location])
+},[Location])
     
-
-
-
-   
-
     return(
         <div className='flex'>
         <div className='flex items-center p-1'>
-        {likeIcon}
+        {addToFavoritesOption ? <IoIosHeartEmpty/> : <FcLike/>}
         </div>
-        <button className='border-2 border-grey-600 p-1 text-xs dark:text-white' onClick={()=>updateFavorites()}>{addToFavoritesText}</button>
+        <button className='border-2 border-grey-600 p-1 text-xs dark:text-white' 
+        onClick={()=>updateFavorites(Location)}>
+        {addToFavoritesOption ? 'Add To Favorites' : 'Remove Favorite' }</button>
         </div>
     )
 

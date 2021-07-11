@@ -6,12 +6,13 @@ import WeatherCardWeekly from '../components/weatherCardWeekly/weatherCardWeekly
 import CurrentWeather from '../components/currentWeather/currentWeather';
 import FavoritesControl from '../components/favoritesControl/favoritesControl';
 import TimeDate from '../components/time/time';
-import SearchBar from '../components/searchBar/searchBar';
+// import SearchBar from '../components/searchBar/searchBar';
 import { FarToCel, CelToFar } from '../components/weatheDegreesConverter/weatheDegreesConverter';
 import ToggleButton from 'react-toggle-button';
 import { tempToggleActions } from '../store/index2';
 import { WiCelsius } from "react-icons/wi";
 import { WiFahrenheit } from "react-icons/wi";
+import SearchCity from '../components/searchBar/autoCompleteSearch';
 
 
 const borderRadiusStyle = { borderRadius: 2 } 
@@ -31,38 +32,38 @@ const WeatherInput = () =>{
     const ApiKey = 'H7yrC1AsYvxVboXkWg3pcGqFFGh58Uxj'
     const [dailyWeather, setDailyWeather] = useState(CurrentWeatherData);
     const [weeklyWeather, setWeeklyWeather] = useState(WeeklyData);
-    const [cityInput, setCityInput] = useState('');
-    const [citySelect, setCitySelect] = useState();
+    // const [cityInput, setCityInput] = useState('');
+    // const [citySelect, setCitySelect] = useState();
 
   
     
     const weekDays = [ 'Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
     
-    // useEffect((cityInfo)=>{
-    //     fetch(`http://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${ApiKey}`)
-    //     .then(res =>res.json())
-    //     .then(res=>setDailyWeather({
-    //         tempFarenhite:res[0].Temperature.Imperial.Value,
-    //         tempCelsius:res[0].Temperature.Metric.Value,
-    //         Icon:res[0].WeatherIcon,
-    //         text:res[0].WeatherText
-    //     }))       
-    // },[locationKey])
+    useEffect((locationKey)=>{
+        fetch(`http://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${ApiKey}`)
+        .then(res =>res.json())
+        .then(res=>setDailyWeather({
+            tempFarenhite:res[0].Temperature.Imperial.Value,
+            tempCelsius:res[0].Temperature.Metric.Value,
+            Icon:res[0].WeatherIcon,
+            text:res[0].WeatherText
+        }))       
+    },[locationKey])
    
 
-    // useEffect(()=>{
-    //     fetch(`http://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${ApiKey}`)
-    //     .then(res =>res.json())
-    //     .then(res=>setWeeklyWeather(res.DailyForecasts.map(weekly=>{
-    //      return{
-    //             minTemp: weekly.Temperature.Minimum.Value,
-    //             maxTemp: weekly.Temperature.Maximum.Value,
-    //             description: weekly.Day.IconPhrase,
-    //             weatherIcon: weekly.Day.Icon,
-    //             day: weekDays[new Date(weekly.Date).getDay()] 
-    //      }
-    // })))
-    // },[locationKey])
+    useEffect(()=>{
+        fetch(`http://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${ApiKey}`)
+        .then(res =>res.json())
+        .then(res=>setWeeklyWeather(res.DailyForecasts.map(weekly=>{
+         return{
+                minTemp: weekly.Temperature.Minimum.Value,
+                maxTemp: weekly.Temperature.Maximum.Value,
+                description: weekly.Day.IconPhrase,
+                weatherIcon: weekly.Day.Icon,
+                day: weekDays[new Date(weekly.Date).getDay()] 
+         }
+    })))
+    },[locationKey])
     
 
     
@@ -105,12 +106,7 @@ const WeatherInput = () =>{
         
     return(
         <div className="dark:bg-gray-600">
-            <div className='flex justify-center m-4 text-xs '>
-            <div className='w-20'>
-            <SearchBar />
-            </div>
-                <button className='border-2 border-grey-600 p-1 ml-2 dark:text-white' onClick={findCityInfo}>search weather</button>    
-            </div>
+        <SearchCity />
             <div className='border-2 border-grey-600 p-2 dark:bg-black'>
                 <div className="flex  sm:justify-between ">
                     <div className=' text-sm '>
