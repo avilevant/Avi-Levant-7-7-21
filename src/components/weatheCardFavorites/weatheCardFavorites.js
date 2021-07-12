@@ -8,76 +8,78 @@ import { useHistory } from 'react-router-dom';
 
 const WeatherCardFavorites=()=>{
 
-    const [arrayOfFavorites, setArrayOfFavorites]=[]
-    const [dailyFavoritesWeather,setDailyFavoritesWeather] = [{}]
-    const [chosenFavorite, setChosenFavorite] = useState(favorites);
+    const [dailyFavoritesWeather,setDailyFavoritesWeather] = useState([]) 
     const history = useHistory();
-
     const dispatch = useDispatch()
-
     const EnterCityInfo = (city,code) => {
         dispatch(CityInfoActions.setCityInfo({
             cityName:city,
-            locationKey:code
-         
+            locationKey:code   
         }))
     }
 
-    //get favorites from localStorage
+
     useEffect(()=>{
-        if(localStorage.getItem('favorites')){
-            let array = JSON.parse(localStorage.getItem('favorites'))
-            // setArrayOfFavorites(array)
+        let favoriteWeather = dailyFavoritesWeather
+        let getArray = localStorage.getItem('favorites')
+        if(getArray){
+            let array = JSON.parse(getArray)
             console.log("read array weather cards: ", array)
+            array.map((e)=>(
+                            fetch(`http://dataservice.accuweather.com/currentconditions/v1/${e.locationKey}?apikey=H7yrC1AsYvxVboXkWg3pcGqFFGh58Uxj`)
+                                .then(res =>{
+                                    if(!res.ok){
+                                        console.log("couldn't get current conditions for your favorites")
+                                    }
+                                return res.json()})
+                                .then(res=>{
+                                    favoriteWeather  = favoriteWeather
+                                        .filter(city => city.Key !== e.locationKey)
+                                    favoriteWeather.push({   
+                                        tempFarenhite:res[0].Temperature.Imperial.Value,
+                                        tempCelsius:res[0].Temperature.Metric.Value,
+                                        Icon:res[0].WeatherIcon,
+                                        text:res[0].WeatherText,  
+                                        Key: e.locationKey,
+                                        city:e.cityName
+                                    })
+                                    setDailyFavoritesWeather(favoriteWeather)}
+                                    ).catch(err=>{
+                                    console.error(err)
+                                })
+                                
+                                 )) 
         }
+
+        console.log("data for cards render1:" ,dailyFavoritesWeather)
     },[])
    
-
-    //get http for dailyweather for each location key stored in local storage
-//     const dailyW = ()=>{
-//                arrayOfFavorites.map((e)=>(
-//             fetch(`http://dataservice.accuweather.com/currentconditions/v1/${e.locationKey}?apikey=${ApiKey}`)
-//                 .then(res =>res.json())
-//                 .then(res=>setDailyFavoritesWeather({
-//                     tempFarenhite:res[0].Temperature.Imperial.Value,
-//                     tempCelsius:res[0].Temperature.Metric.Value,
-//                     Icon:res[0].WeatherIcon,
-//                     text:res[0].WeatherText
-//                 })) )) 
-//  }
-
-
-
-    //map over the array of objects and display on card
-
-
-
-
-
-    //on click of card, pass name of city to weather input page and switch to the page
   
     const favoriteWeekly =(info)=>{
         console.log(info.city)
-        // EnterCityInfo(info.city, info.code)
-        EnterCityInfo('Jerusalem', '213225')
+        EnterCityInfo(info.city, info.Key)
         history.push('/')
     }
     
 
     const favoritesCards =()=>{
-        return(
+        console.log("data for cards render2:" ,dailyFavoritesWeather)
+            if(dailyFavoritesWeather.length>0){
 
-            !!favorites &&  favorites.map((info,index)=>(
-                    <div key={index} className="flex place-self-center shadow-lg  p-2 mt-2 dark:bg-black" 
-                         onClick={()=>{favoriteWeekly(info)} }>
-                        <CurrentWeather     city={info.city}
-                                            Icon={info.Icon}
-                                            tempCelsius={info.tempCelsius}
-                                            text={info.text} />                                         
-                    </div>
-            ))
-            
-        )
+                return(
+        
+                      dailyFavoritesWeather.map((info,index)=>(//change favorites to dailyFavoritesWeather
+                            <div key={index} className="flex place-self-center shadow-lg  p-2 mt-2 dark:bg-black" 
+                                 onClick={()=>{favoriteWeekly(info)} }>
+                                <CurrentWeather     city={info.city}
+                                                    Icon={info.Icon}
+                                                    tempCelsius={info.tempCelsius}
+                                                    text={info.text} />                                         
+                            </div>
+                    ))
+                    
+                )
+            }
     }
 
     return(

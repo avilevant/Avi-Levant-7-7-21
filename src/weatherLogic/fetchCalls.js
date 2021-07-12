@@ -32,12 +32,29 @@ const IS_MOCKED_DATA = false;
     return fetch('...api')
   };
 
-  export const getCitiesByString= async(searchInput) => {
-    const response = await fetch(`https://jsonplaceholder.typicode.com/users?name_like=${searchInput}`)
-    if(!response.ok){
-        throw new Error("can't get city names")
-    }
-    const cities=await response.json()
+  export const getCitiesByString= async(input) => {
+    try{
 
-    return cities.map(res=>({label:res.name,value:res.name}))
+       const response = await fetch(`http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=oYr86E90OF6kKAgK9NJv9xuNXeHCARHF&q=${input}`)
+      if(!response.ok){
+          throw new Error("can't get city names")
+      }
+      const cityList=await response.json()
+    }catch(error){
+    console.error(error)
+  }    
   }
+
+
+   // useEffect(() => {
+    //     const loadCities = async(input)=>{
+    //      const response = await fetch(`http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=oYr86E90OF6kKAgK9NJv9xuNXeHCARHF&q=${input}`)
+    //          if(!response.ok){
+    //              throw new Error("can't get city names")
+    //          }
+    //          const cityList=await response.json()
+    //          setCities(cityList)
+    //          console.log("received from url: " ,cities)    
+    //     }
+    //     loadCities(input)
+    //  }, [input])

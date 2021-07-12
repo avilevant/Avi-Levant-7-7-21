@@ -9,7 +9,7 @@ const FavoritesControl =(Location)=>{
 
     const ChangButtonState = ()=>{
         setAddToFavoritesOption(!addToFavoritesOption)
-        console.log('button state: ',addToFavoritesOption) 
+        console.log('button state: ',!addToFavoritesOption) 
     }
 
     const readLocalStorage =()=>{
@@ -45,11 +45,9 @@ const FavoritesControl =(Location)=>{
     //check if entered city already in favorites
     useEffect(()=>{
         let array= readLocalStorage()
-        if(array.find((e)=>e.locationKey===Location.locationKey)){
+        if (addToFavoritesOption === (!!array.find((e)=>e.locationKey===Location.locationKey)))
             ChangButtonState()   
-    }
-
-},[Location])
+    },[Location])
     
     return(
         <div className='flex'>

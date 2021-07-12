@@ -1,4 +1,3 @@
-import React from 'react';
 import { createSlice, configureStore } from '@reduxjs/toolkit';
 import CityInfoSlice from './city-slice';
 

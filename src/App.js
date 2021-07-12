@@ -11,7 +11,7 @@ function App() {
 
   return (
     <div className={ mode ? 'dark' : ''}>
-      <div className='dark:bg-gray-600'>
+      <div className='h-screen dark:bg-gray-600'>
         <Router>
           <NavigationBar/>
             <Switch>

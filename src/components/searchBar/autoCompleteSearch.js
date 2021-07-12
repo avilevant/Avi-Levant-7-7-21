@@ -7,14 +7,15 @@ const SearchCity = () =>{
 
     const dispatch = useDispatch()
     const [cities, setCities] = useState([]);
+    console.log('cities last check: ', cities)
     const [input, setInput] = useState('');
     const [suggestions, setSuggestions] = useState([])
 
     const EnterCityInfo = (cities) => {
+        console.log("show me",cities)
         dispatch(CityInfoActions.setCityInfo({
-            cityName:cities.LocalizedName,
-            locationKey:cities.key
-         
+            cityName:cities[0].LocalizedName,
+            locationKey:cities[0].Key
         }))
 
         setInput('')
@@ -23,17 +24,20 @@ const SearchCity = () =>{
     
 
     useEffect(() => {
-       const loadCities = async(input)=>{
-        const response = await fetch(`http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=H7yrC1AsYvxVboXkWg3pcGqFFGh58Uxj&q=${input}`)
-            if(!response.ok){
+         if (input === '' )
+            return 
+
+         fetch(`http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey=avx7kGUSvEuizNxsnGQ7tUBE9Uy5BhG3&q=${input}`)
+         .then(res=>{
+            if(!res.ok){
                 throw new Error("can't get city names")
-            }
-            const cityList=await response.json()
-            setCities(cityList)
-            console.log("recived from url: " ,cities)    
-       }
-       loadCities(input)
-    }, [input])
+            }return res.json()})
+         .then(res=>setCities(res))  
+         .catch(Error=>{
+         console.log(Error)})     
+     }, [input])
+
+
 
 
     const onChangeInput = (text) =>{
@@ -52,7 +56,8 @@ const SearchCity = () =>{
 
     const optionsHandler =(input)=>{
         setInput(input) 
-        setCities(suggestions.find(e=>e.LocalizedName===input))
+        setCities([suggestions.find(e=>e.LocalizedName===input)])
+        
         setSuggestions([])
         
     }
