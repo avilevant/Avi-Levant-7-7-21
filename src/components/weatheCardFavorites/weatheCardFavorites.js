@@ -1,7 +1,6 @@
 import React,{useEffect,useState} from 'react';
 import { CityInfoActions } from '../../store/city-slice';
 import { useDispatch } from 'react-redux';
-import { favorites } from '../tesingData/testingData';
 import CurrentWeather from '../currentWeather/currentWeather';
 import { useHistory } from 'react-router-dom';
 
@@ -24,9 +23,8 @@ const WeatherCardFavorites=()=>{
         let getArray = localStorage.getItem('favorites')
         if(getArray){
             let array = JSON.parse(getArray)
-            console.log("read array weather cards: ", array)
             array.map((e)=>(
-                            fetch(`http://dataservice.accuweather.com/currentconditions/v1/${e.locationKey}?apikey=H7yrC1AsYvxVboXkWg3pcGqFFGh58Uxj`)
+                            fetch(`https://dataservice.accuweather.com/currentconditions/v1/${e.locationKey}?apikey=H7yrC1AsYvxVboXkWg3pcGqFFGh58Uxj`)
                                 .then(res =>{
                                     if(!res.ok){
                                         console.log("couldn't get current conditions for your favorites")
@@ -45,14 +43,7 @@ const WeatherCardFavorites=()=>{
                                     })
                                     setDailyFavoritesWeather(favoriteWeather)}
                                     ).catch(err=>{
-                                    console.error(err)
-                                })
-                                
-                                 )) 
-        }
-
-        console.log("data for cards render1:" ,dailyFavoritesWeather)
-    },[])
+                                    console.error(err)})))}},[])
    
   
     const favoriteWeekly =(info)=>{
@@ -63,7 +54,6 @@ const WeatherCardFavorites=()=>{
     
 
     const favoritesCards =()=>{
-        console.log("data for cards render2:" ,dailyFavoritesWeather)
             if(dailyFavoritesWeather.length>0){
 
                 return(

@@ -11,7 +11,6 @@ const CityInfoSlice=createSlice({
         setCityInfo(state,action){
             state.cityName = action.payload.cityName;
             state.locationKey = action.payload.locationKey;
-            // state.country = action.payload;
         }
     }
   

@@ -1,12 +1,9 @@
 import React, { useEffect, useState} from 'react';
 import { useDispatch,useSelector } from 'react-redux';
-import { CurrentWeatherData, WeeklyData } from '../components/tesingData/testingData';
-import WeatherCardFavorites from '../components/weatheCardFavorites/weatheCardFavorites';
 import WeatherCardWeekly from '../components/weatherCardWeekly/weatherCardWeekly';
 import CurrentWeather from '../components/currentWeather/currentWeather';
 import FavoritesControl from '../components/favoritesControl/favoritesControl';
 import TimeDate from '../components/time/time';
-// import SearchBar from '../components/searchBar/searchBar';
 import { FarToCel, CelToFar } from '../components/weatheDegreesConverter/weatheDegreesConverter';
 import ToggleButton from 'react-toggle-button';
 import { tempToggleActions } from '../store/index2';
@@ -29,15 +26,13 @@ const WeatherInput = () =>{
         dispatch(tempToggleActions.tempToggle())
     }
     
-    // const ApiKey = 'oYr86E90OF6kKAgK9NJv9xuNXeHCARHF'
     const ApiKey = 'H7yrC1AsYvxVboXkWg3pcGqFFGh58Uxj'
-    // const ApiKey = 'avx7kGUSvEuizNxsnGQ7tUBE9Uy5BhG3'
     const [dailyWeather, setDailyWeather] = useState([]);//CurrentWeatherData
     const [weeklyWeather, setWeeklyWeather] = useState([]);//WeeklyData
   
     
     useEffect(()=>{
-        fetch(`http://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${ApiKey}`)
+        fetch(`https://dataservice.accuweather.com/currentconditions/v1/${locationKey}?apikey=${ApiKey}`)
        .then(res =>{
             if(!res.ok){
                 console.log("didn't get the current forecast")
@@ -55,7 +50,7 @@ const WeatherInput = () =>{
     useEffect(()=>{
         const weekDays = [ 'Sunday','Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
 
-        fetch(`http://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${ApiKey}`)
+        fetch(`https://dataservice.accuweather.com/forecasts/v1/daily/5day/${locationKey}?apikey=${ApiKey}`)
         .then(res =>{
             if(!res.ok){
                 console.log("didn't get the weekly forecast")
@@ -100,7 +95,7 @@ const WeatherInput = () =>{
         <div className="dark:bg-gray-600">
         <SearchCity />
             <div className= 'border-2 border-grey-600 p-2 dark:bg-black'>
-                <div className="flex  sm:justify-between ">
+                <div className="flex  sm:justify-between mt-5 ">
                     <div className=' text-sm '>
                         <h1 className='dark:text-white'>{cityName}</h1>
                         <TimeDate/>    
@@ -116,12 +111,13 @@ const WeatherInput = () =>{
                    
                     </div>
                 </div>
-                    <div className='grid grid-cols-1  sm:grid-cols-5 gap-4'>
+                    <div className='grid grid-cols-1  sm:grid-cols-5 gap-4 mt-6'>
                     {WeatherCards()}
                     </div>
-                    <div className='flex justify-center mt-4'>
-                    <p className='text-xs mr-1'>F/C Display</p>
-                    <ToggleButton  value={value} onToggle={()=>dispatchToggleTemp()}
+                    <div className='flex justify-center m-6'>
+                    <p className='text-xs mr-1 dark:text-gray-50'>F/C Display</p>
+                    <ToggleButton 
+                    value={value} onToggle={()=>dispatchToggleTemp()}
                     inactiveLabel={<WiCelsius/>}
                     activeLabel={<WiFahrenheit/>}
                     thumbStyle={borderRadiusStyle}

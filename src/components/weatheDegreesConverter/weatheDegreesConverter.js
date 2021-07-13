@@ -1,5 +1,3 @@
-import React from 'react';
-
 export const FarToCel=(fahrenheit)=>{
     let fTemp = fahrenheit.fahrenheit
     let FarToCel = ((fTemp - 32) * 5 / 9)

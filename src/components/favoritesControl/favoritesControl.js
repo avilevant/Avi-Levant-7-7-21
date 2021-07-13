@@ -9,7 +9,6 @@ const FavoritesControl =(Location)=>{
 
     const ChangButtonState = ()=>{
         setAddToFavoritesOption(!addToFavoritesOption)
-        console.log('button state: ',!addToFavoritesOption) 
     }
 
     const readLocalStorage =()=>{
@@ -27,17 +26,13 @@ const FavoritesControl =(Location)=>{
             ChangButtonState()
             let array = readLocalStorage()
                 if(!array.find((e)=>e.locationKey===Location.locationKey)){
-                    console.log('locationKey+:' ,Location)
                     array.push(Location)
                     setLocalStorage(array)
-                    console.log(localStorage)
                 }
           }else{
             let array = readLocalStorage().filter(e=>e.locationKey!==Location.locationKey)
-            console.log('new array: ', array)
             setLocalStorage(array)
             ChangButtonState()  
-            console.log(localStorage)
           }  
     }
 
